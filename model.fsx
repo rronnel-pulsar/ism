@@ -1,6 +1,9 @@
 (*
 
-    version 1.
+    version 2.
+
+    # Changes
+        - Remove Card State.
 
     # Assumption
         - Transition States are simillar between swimlanes.
@@ -13,41 +16,41 @@ type Inspection = {
 }
 
 // TODO. unhappy path cases.
-type BasicTransition =
+type BasicTransitionState =
     | Idle
     | Loading
     | Loaded
-type FadingTransition =
+
+type FadingTransitionState =
     | Idle
     | Loading
     | Loaded
     | FadingIn
     | FadingOut
-type FlyingTransition =
+
+type FlyingTransitionState =
     | Idle
     | Loading
     | Flying
     | Loaded
 
-type CardTransitionTypes =
+type CardTransitionType =
     | None
-    | Basic of BasicTransition
-    | Fading of FadingTransition
-    | Flying of FlyingTransition
+    | Basic of BasicTransitionState
+    | Fading of FadingTransitionState
+    | Flying of FlyingTransitionState
 
-type CardState =
-    | Idle
-    | Loading
-    | Loaded
+//type CardState =
+//    | Idle
+//    | Loading
+//    | Loaded
 
 type Card = {
     cardId: string
-    inspectionId: string
-
-    cardState: CardState                    // ------\
-                                            //        |----> mutual exlusive!
-    transitionTypes: CardTransitionTypes    // ------/
-}
+    inspectionId: string // single unique reference to annotations.
+    //cardState: CardState
+    transitionType: CardTransitionType
+ }
 
 type SwimlaneName =
     | Annotating
@@ -61,12 +64,8 @@ type Swimlane = {
 
 type Board = Swimlane list
 
-
 let card = {
     cardId= "1"
     inspectionId= "1"
-
-    cardState= Idle
-    transitionTypes= Fading FadingTransition.Loading // we can't transition while the card is idle!
+    transitionType= Fading FadingTransitionState.Loading
 }
-
